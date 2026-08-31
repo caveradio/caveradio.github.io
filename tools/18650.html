@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор внутрішнього опору акумулятора 18650</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #2980b9;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #e1e8ed;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            color: #4a5568;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 40px 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.15);
+        }
+
+        .unit {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #1f6391;
+        }
+
+        .result-card {
+            margin-top: 24px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .result-card.active {
+            display: block;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .result-title {
+            font-size: 0.95rem;
+            color: #718096;
+            font-weight: 600;
+        }
+
+        .result-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .status-excellent {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-good {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .status-fair {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-bad {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-description {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 14px;
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        .details-item span {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .error-message {
+            color: #e53e3e;
+            font-size: 0.85rem;
+            margin-top: 6px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Тестер опору 18650</h1>
+    <p class="subtitle">Оцінка стану акумулятора за методом навантаження</p>
+
+    <form id="calcForm" onsubmit="calculateResistance(event)">
+        <div class="form-group">
+            <label for="v1">Початкова напруга без навантаження (V₁)</label>
+            <div class="input-wrapper">
+                <input type="number" id="v1" step="0.01" min="0" max="5" placeholder="наприклад, 4.15" required>
+                <span class="unit">В</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="v2">Напруга під навантаженням (V₂)</label>
+            <div class="input-wrapper">
+                <input type="number" id="v2" step="0.01" min="0" max="5" placeholder="наприклад, 3.95" required>
+                <span class="unit">В</span>
+            </div>
+            <div id="v2Error" class="error-message">Напруга під навантаженням має бути меншою за початкову.</div>
+        </div>
+
+        <div class="form-group">
+            <label for="rLoad">Опір навантажувального резистора (R)</label>
+            <div class="input-wrapper">
+                <input type="number" id="rLoad" step="0.1" min="0.1" placeholder="наприклад, 4.7" required>
+                <span class="unit">Ом</span>
+            </div>
+        </div>
+
+        <button type="submit">Розрахувати стан</button>
+    </form>
+
+    <div id="resultCard" class="result-card">
+        <div class="result-header">
+            <div>
+                <div class="result-title">Внутрішній опір (R_int)</div>
+                <div id="resMiliOhm" class="result-value">0 мОм</div>
+            </div>
+            <div id="statusBadge" class="status-badge">--</div>
+        </div>
+        <div id="statusDescription" class="status-description"></div>
+        <div class="details-grid">
+            <div class="details-item">Струм розряду: <span id="currentVal">0 А</span></div>
+            <div class="details-item">Просідання напруги: <span id="dropVal">0 В</span></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculateResistance(event) {
+        event.preventDefault();
+
+        const v1 = parseFloat(document.getElementById('v1').value);
+        const v2 = parseFloat(document.getElementById('v2').value);
+        const rLoad = parseFloat(document.getElementById('rLoad').value);
+
+        const v2Error = document.getElementById('v2Error');
+        const resultCard = document.getElementById('resultCard');
+
+        if (v2 >= v1) {
+            v2Error.style.display = 'block';
+            resultCard.classList.remove('active');
+            return;
+        } else {
+            v2Error.style.display = 'none';
+        }
+
+        // Обчислення
+        const current = v2 / rLoad; // I = V2 / R_load
+        const rIntOhm = (v1 - v2) / current; // R_int = (V1 - V2) / I
+        const rIntMilliOhm = Math.round(rIntOhm * 1000);
+        const voltageDrop = (v1 - v2).toFixed(2);
+
+        // Вивід значень
+        document.getElementById('resMiliOhm').innerText = rIntMilliOhm + ' мОм';
+        document.getElementById('currentVal').innerText = current.toFixed(2) + ' А';
+        document.getElementById('dropVal').innerText = voltageDrop + ' В';
+
+        // Аналіз стану акумулятора
+        const badge = document.getElementById('statusBadge');
+        const desc = document.getElementById('statusDescription');
+
+        badge.className = 'status-badge';
+
+        if (rIntMilliOhm <= 40) {
+            badge.classList.add('status-excellent');
+            badge.innerText = 'Відмінний';
+            desc.innerHTML = '<strong>Чудовий стан!</strong> Підходить для будь-яких задач, у тому числі для високострумового електроінструменту, шурупокрутів та потужних ліхтарів.';
+        } else if (rIntMilliOhm <= 80) {
+            badge.classList.add('status-good');
+            badge.innerText = 'Добрий';
+            desc.innerHTML = '<strong>Хороший робочий стан.</strong> Підходить для повербанків, звичайних ліхтариків, роутерів та помірних навантажень.';
+        } else if (rIntMilliOhm <= 150) {
+            badge.classList.add('status-fair');
+            badge.innerText = 'Задовільний';
+            desc.innerHTML = '<strong>Є помірний знос.</strong> Використовувати тільки для малопотужних пристроїв (годинники, датчики, слабострумові схеми).';
+        } else {
+            badge.classList.add('status-bad');
+            badge.innerText = 'Зношений';
+            desc.innerHTML = '<strong>Критичний знос або деградація.</strong> Акумулятор буде сильно грітися під навантаженням і швидко втрачати напругу. Використовувати не рекомендується.';
+        }
+
+        resultCard.classList.add('active');
+    }
+</script>
+
+</body>
+</html>
