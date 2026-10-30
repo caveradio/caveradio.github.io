@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cave Radio / Персональний сайт</title>
+    <style>
+        /* Основні скидання стилів та змінні */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-color: #fafafa;
+            --card-bg: #ffffff;
+            --text-color: #1a1a1a;
+            --text-muted: #666666;
+            --border-color: #e5e5e5;
+            --accent-color: #000000;
+            --radius: 8px;
+            --max-width: 800px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        /* Шапка сайту */
+        header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 25px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+
+        /* Навігаційне меню */
+        nav {
+            margin-top: 20px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            background-color: #f0f0f0;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        nav a:hover {
+            background-color: var(--accent-color);
+            color: #ffffff;
+        }
+
+        /* Розділи контенту */
+        section {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        section h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        section p {
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        /* Підвал */
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+      /*посилання*/
+ a {
+    text-decoration: none; /* Прибирає підкреслення для посилань */
+    color: blue;
+   } 
+a:visited {
+  color: blue;
+  }
+ a:hover { 
+    text-decoration: underline; /* Додаємо підкреслення при наведенні курсору на посилання */
+    color: #000000; /* Посилання іншого кольору */
+   } 
+
+
+
+        /* Адаптивність для смартфонів */
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            header h1 {
+                font-size: 1.6rem;
+            }
+
+            nav ul {
+                gap: 8px;
+            }
+
+            nav a {
+                font-size: 0.85rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Шапка з меню -->
+        <header>
+            <h1><a href="../index.html">Печерне радіо</a></h1>
+            <p>Персональна сторінка та робочий простір.</p>
+        
+        </header>
+
+        <!-- Основні розділи -->
+        <main>
+    <section>
+                <h2 style="text-align: center;">Генератор синуса для експериментів з VLF. Від 3 до 30 кГц.</h2>
+                <p style="text-align: center;"><img src="generator_vlf.JPG" width="80%"></p>
+                <p>Для різноманітних експериментів з радіо дуже корисним інструментом є генератор синусоїдального сигналу. Показую свою просту саморобку, яка генерує стабільний чистий синус від 2,8 до 35 кГц. Такий діапазон я обрав навмисно для експериментів з VLF. Ви можете змінити діапазон для своїх конкретних завдань. Схема дуже варіативна.
+<br><br>
+Я використав операційний підсилювач LM358, хоча підійде буквально будь-який популярний операційний підсилювач. Коливання відбуваються за допомогою моста Віна. Це проста і надійна схема, яка багато разів мене виручала. У мене схема живиться від 12 в, хоча можна живити від 9 до 15 в. Генератор має два вихідні роз'єми. Один до потенціометра, і другий після потенціометра. На роз'ємі після потенціометра можна змінювати амплітуду. Роз'єм до потенціометра можна використовувати для контролю, підключивши туди частотомір. Резистор R1 це здвоєний резистор на 20 кОм, за допомогою нього регулюється частота. На першому каскад операційного підсилювача побудовано генератор, а на другому повторювач, який виконує роль буфера, щоб навантаження не впливало на генератор.
+<br><br>
+<a href="https://youtu.be/xPVmAex4wlU">Відео</a> про генератор ви можете переглянути на моєму ютуб-каналі.
+</p>
+   
+
+
+
+     </section>
+        </main>
+
+        <!-- Підвал -->
+        <footer>
+            <p>&copy; 2026 Cave Radio. Усі права захищено.</p>
+        </footer>
+    </div>
+
+</body>
+</html>
